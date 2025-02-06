@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Cute Bear Login</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script>
+  <style>
+    :root {
+      --ice: #DAF7FF;
+      --white: #FFFFFF;
+      --black: #1A1A1A;
+      --primary: #4a90e2;
+      --background: #1d1f21;
+      --accent: #c5ebff;
+      --input-bg: #f0f0f0;
+    }
+    
+    /* Reset and base styling */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      min-height: 100vh;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #1d1f21, #2e3237);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--white);
+    }
+    
+    #app {
+      background-color: #282a2e;
+      border-radius: 12px;
+      padding: 30px 40px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+      text-align: center;
+      width: 320px;
+      position: relative;
+    }
+    
+    h1 {
+      margin-bottom: 20px;
+      font-size: 24px;
+      color: var(--primary);
+    }
+    
+    /* Bear styles */
+    #bear {
+      position: relative;
+      margin: 0 auto 20px;
+      width: 120px;
+      height: 120px;
+      background-color: var(--ice);
+      border-radius: 50%;
+      overflow: hidden;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    }
+    
+    #head {
+      position: absolute;
+      transform: translate(-50%, 0);
+      background-color: var(--white);
+      height: 70px;
+      width: 75px;
+      bottom: 0;
+      left: 50%;
+      border-radius: 50% 50% 0 0;
+    }
+    
+    #eyes {
+      position: absolute;
+      transform: translate(-20px, 2px);
+      top: 35%;
+      width: 40px;
+      left: 50%;
+      transition: transform 200ms;
+    }
+    
+    .eye {
+      position: absolute;
+      top: 0;
+      height: 5px;
+      width: 5px;
+      border-radius: 50%;
+      background-color: var(--black);
+      transition: height 0.2s ease;
+    }
+    
+    .eye:nth-child(1) {
+      left: 0;
+    }
+    
+    .eye:nth-child(2) {
+      right: 0;
+    }
+    
+    .eye-closed {
+      height: 1px !important;
+    }
+    
+    #ears {
+      position: absolute;
+      transform: translate(-50%, -50%);
+      top: 10px;
+      left: 50%;
+      width: 65px;
+      height: 5px;
+    }
+    
+    .ear {
+      position: absolute;
+      bottom: 0;
+      background-color: var(--white);
+      width: 14px;
+      height: 13px;
+      border-radius: 50% 50% 0 0;
+    }
+    
+    .ear:nth-child(1) {
+      left: 0;
+      transform: rotate(-17deg);
+    }
+    
+    .ear:nth-child(2) {
+      right: 0;
+      transform: rotate(17deg);
+    }
+    
+    #facial {
+      position: absolute;
+      top: 65%;
+      left: 50%;
+      width: 14px;
+      height: 20px;
+      transition: transform 200ms;
+    }
+    
+    #nose {
+      position: absolute;
+      transform: translateX(-50%);
+      top: 0;
+      left: 50%;
+      width: 14px;
+      height: 10px;
+      background-color: var(--black);
+      border-radius: 5px;
+    }
+    
+    #mouth {
+      position: absolute;
+      transform: translateX(-50%);
+      top: 8px;
+      left: 50%;
+      width: 2px;
+      height: 6px;
+      background-color: var(--black);
+    }
+    
+    #mouth::before,
+    #mouth::after {
+      content: "";
+      position: absolute;
+      width: 8px;
+      height: 5px;
+      top: 1px;
+      border-radius: 50%;
+      border-bottom: 2px solid var(--black);
+    }
+    
+    #mouth::before {
+      left: -6px;
+    }
+    
+    #mouth::after {
+      right: -6px;
+    }
+    
+    /* Form styles */
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+    
+    input {
+      width: 100%;
+      padding: 12px 15px;
+      border: none;
+      background-color: var(--input-bg);
+      border-radius: 6px;
+      outline: none;
+      font-size: 14px;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    input:focus {
+      background-color: var(--white);
+      box-shadow: 0 0 0 2px var(--ice);
+    }
+    
+    button {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      background-color: var(--ice);
+      color: var(--black);
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 14px;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+    
+    button:hover {
+      background-color: var(--accent);
+      transform: translateY(-2px);
+    }
+    
+    .error-message {
+      color: #ff4444;
+      font-size: 12px;
+      text-align: center;
+      margin-top: -10px;
+    }
+    
+    /* Footer credit */
+    footer {
+      margin-top: 20px;
+      font-size: 12px;
+      color: #aaa;
+    }
+    
+    footer a {
+      color: #aaa;
+      text-decoration: none;
+    }
+    
+    footer a:hover {
+      text-decoration: underline;
+    }
+    
+  </style>
+</head>
+<body>
+  <div id="app">
+    <h1>Welcome Back!</h1>
+    <div id="bear">
+      <div id="head">
+        <div id="eyes" :style="{transform: 'translate(' + eye.x + 'px,' + eye.y + 'px)'}">
+          <div class="eye" :class="{ 'eye-closed': isPasswordFocused }"></div>
+          <div class="eye" :class="{ 'eye-closed': isPasswordFocused }"></div>
+        </div>
+        <div id="facial" :style="{transform: 'translate(' + facial.x + 'px,' + facial.y + 'px)'}">
+          <div id="nose"></div>
+          <div id="mouth"></div>
+        </div>
+        <div id="ears">
+          <div class="ear"></div>
+          <div class="ear"></div>
+        </div>
+      </div>
+    </div>
+
+    <form @submit.prevent="handleSubmit">
+      <input 
+        type="text" 
+        placeholder="Username" 
+        v-model="username" 
+        required
+      />
+      <input 
+        type="password" 
+        placeholder="Password" 
+        v-model="password" 
+        @focus="isPasswordFocused = true" 
+        @blur="isPasswordFocused = false"
+        required
+      />
+      <button type="submit">Login</button>
+      <div class="error-message" v-if="error">{{ error }}</div>
+    </form>
+
+    <footer>
+      Created by <a href="https://x.com/sauravv_x" target="_blank">(sauravv_x)</a>
+    </footer>
+  </div>
+
+  <script>
+    new Vue({
+      el: '#app',
+      data: {
+        username: '',
+        password: '',
+        isPasswordFocused: false,
+        error: ''
+      },
+      computed: {
+        eye() {
+          let length = this.username.length;
+          let x = 20;
+          let y = 0;
+          if (length > 0 && length < 33) {
+            x = length;
+          } else if (length >= 33) {
+            x = 33;
+          }
+          if (length > 0 && length < 18) {
+            y = x * 0.2;
+          } else if (length >= 18) {
+            y = (36 - x) * 0.2;
+          }
+          return { x: -26 + (x * 0.3), y: y };
+        },
+        facial() {
+          let length = this.username.length;
+          let x = 20;
+          let y = -6;
+          if (length > 0 && length < 33) {
+            x = length;
+          } else if (length >= 33) {
+            x = 33;
+          }
+          if (length > 0 && length < 18) {
+            y = -6 + (x * 0.2);
+          } else if (length >= 18) {
+            y = -6 + ((36 - x) * 0.2);
+          }
+          return { x: -12 + (x * 0.3), y: y };
+        }
+      },
+      methods: {
+        handleSubmit() {
+          if (this.username.length < 3) {
+            this.error = 'Username must be at least 3 characters';
+            return;
+          }
+          if (this.password.length < 6) {
+            this.error = 'Password must be at least 6 characters';
+            return;
+          }
+          this.error = '';
+          console.log('Login attempt:', {
+            username: this.username,
+            password: this.password
+          });
+          alert('Login successful!');
+        }
+      }
+    });
+  </script>
+</body>
+</html>
